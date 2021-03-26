@@ -14,22 +14,30 @@ const productAPI = axios.create({
 });
 
 module.exports = {
- 
+
   /**
   * Retrieves a product that matches the given product ID
   * https://commercejs.com/docs/api/#get-product
   */
-  getProduct: async (productID) => {
+  retrieveProduct: async (productID) => {
     return await productAPI.get(productID)
       .then(function (product) {
         return { data: product.data, status: product.status };
       })
       .catch(function (error) {
+
+        const baseErrorMsg = "There was an error retrieving the product";
+
         if (error.response) {
-          console.error('There was an error fetching the product', error);
-          return { data: error.response.data, status: error.response.status };
+          console.error(baseErrorMsg, error);
+          return { error: baseErrorMsg, data: error.response.data, status: error.response.status };
+        } else if (error.request) {
+          console.error(baseErrorMsg + " - The request was made but no response was received", error);
+          return { error: baseErrorMsg + " - The request was made but no response was received", status: 502 };
         } else {
-          return { data: error.message, status: 500 };
+          console.error(baseErrorMsg + " - The Request was not made", error);
+          return { error: baseErrorMsg + " - The Request was not made", data: error.message, status: 500 };
+
         }
       });
   },
@@ -44,11 +52,18 @@ module.exports = {
         return { data: cart.data, status: cart.status };
       })
       .catch(function (error) {
+        const baseErrorMsg = "There was an error retrieving a list of products";
+
         if (error.response) {
-          console.error('There was an error listing the products', error);
-          return { data: error.response.data, status: error.response.status };
+          console.error(baseErrorMsg, error);
+          return { error: baseErrorMsg, data: error.response.data, status: error.response.status };
+        } else if (error.request) {
+          console.error(baseErrorMsg + " - The request was made but no response was received", error);
+          return { error: baseErrorMsg + " - The request was made but no response was received", status: 502 };
         } else {
-          return { data: error.message, status: 500 };
+          console.error(baseErrorMsg + " - The Request was not made", error);
+          return { error: baseErrorMsg + " - The Request was not made", data: error.message, status: 500 };
+
         }
       });
   }
