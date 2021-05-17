@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": "nodemon --exec npx babel-node ./src/routes/server.js",
+    "prestartprod": "npm run build",
     "startprod": "node ./lib/routes/server.js",
     "build": "babel src -d lib"
   },
